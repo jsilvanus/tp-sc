@@ -1,0 +1,79 @@
+{
+  "sdk":1,
+  "version":1,
+  "name":"Slideshow Control",
+  "id":"tpsc",
+  "configuration" : {
+    "colorDark" : "#992211",
+    "colorLight" : "#0033d3"
+  },
+  "categories": [
+    {
+      "id":"tpscCat",
+      "name":"Slideshow Controls",
+      "imagepath":"%TP_PLUGIN_FOLDER%SlideControl\\tp_sc.png",
+      "actions": [
+        {
+        "id":"tpscActionNoArgs",
+        "prefix":"Do the following action:",
+        "name":"Slideshow Control Action",
+        "description":"This will trigger the chosen Slideshow Control Action.",
+        "format":"Slideshow Control {$action$}",
+        "type":"execute",
+        "execution_cmd":"%TP_PLUGIN_FOLDER%SlideControl\\tp_sc.bat /cmd:{$action$}",
+        "data": [
+          {
+            "id":"action",
+            "type":"choice",
+            "label":"Action",
+            "valueChoices": [
+              "BOOT",
+              "QUIT",
+              "CLOSE",
+              "START",
+              "STOP",
+              "PAUSE",
+              "RESUME",
+              "FIRST",
+              "LAST",
+              "PREV",
+              "NEXT",
+            ],
+          },
+        ]
+        },
+        {
+          "id":"tpscActionOpen",
+          "prefix":"Do the following action: ",
+          "name":"Open Slideshow File",
+          "type":"execute",
+          "format":"Open Slideshow: $filename$",
+          "execution_cmd":"%TP_PLUGIN_FOLDER%SlideControl\\tp_sc.bat /cmd:OPEN /arg:{$filename$}",
+          "data": [
+            {
+              "id":"filename",
+              "type":"text",
+              "label":"Filename",
+              "default":"whatnow",
+            },
+          ]
+        },
+        {
+          "id":"tpscActionGoTo",
+          "prefix":"Do the following action: ",
+          "name":"Go to Slide",
+          "type":"execute",
+          "execution_cmd":"%TP_PLUGIN_FOLDER%SlideControl\\tp_sc.bat /cmd:GOTO /arg:{$slide$}",
+          "data": [
+            {
+              "id":"slide",
+              "type":"number",
+              "label":"Slide Number",
+              "default":1,
+            },
+          ]
+        },
+      ],
+    }
+  ]
+}

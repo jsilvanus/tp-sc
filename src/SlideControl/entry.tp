@@ -62,7 +62,7 @@
           "id":"tpscActionGoTo",
           "prefix":"Do the following action: ",
           "name":"Go to slide",
-          "format":"Go to slide {$slide}",
+          "format":"Go to slide {$slide$}",
           "type":"execute",
           "execution_cmd":"%TP_PLUGIN_FOLDER%SlideControl\\tp_sc.bat /cmd:GOTO /arg:{$slide$}",
           "data": [

@@ -18,7 +18,7 @@
         "prefix":"Do the following action:",
         "name":"Slideshow Control Action",
         "description":"This will trigger the chosen Slideshow Control Action.",
-        "format":"Slideshow Control {$action$}",
+        "format":"Slideshow Control Action: {$action$}",
         "type":"execute",
         "execution_cmd":"%TP_PLUGIN_FOLDER%SlideControl\\tp_sc.bat /cmd:{$action$}",
         "data": [
@@ -47,13 +47,13 @@
           "prefix":"Do the following action: ",
           "name":"Open Slideshow File",
           "type":"execute",
-          "format":"Open Slideshow: $filename$",
+          "format":"Open PowerPoint File: {$filename$}",
           "execution_cmd":"%TP_PLUGIN_FOLDER%SlideControl\\tp_sc.bat /cmd:OPEN /arg:{$filename$}",
           "data": [
             {
               "id":"filename",
               "type":"text",
-              "label":"Filename",
+              "label":"Give the filename.",
               "default":"whatnow",
             },
           ]
@@ -61,7 +61,8 @@
         {
           "id":"tpscActionGoTo",
           "prefix":"Do the following action: ",
-          "name":"Go to Slide",
+          "name":"Go to slide",
+          "format":"Go to slide {$slide}",
           "type":"execute",
           "execution_cmd":"%TP_PLUGIN_FOLDER%SlideControl\\tp_sc.bat /cmd:GOTO /arg:{$slide$}",
           "data": [

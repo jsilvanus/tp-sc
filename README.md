@@ -1,5 +1,7 @@
 # tp-sc
-Touch Portal SlideControl
+Slideshow Control Plugin for Touch Portal
+
+Version: 1.0.0
 
 Info: Plugin is meant to enable Touch Portal to communicate with Powerpoint and maybe other similar programs.
 

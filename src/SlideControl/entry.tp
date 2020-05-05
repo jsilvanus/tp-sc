@@ -47,7 +47,7 @@
           "prefix":"Do the following action: ",
           "name":"Open Slideshow File",
           "type":"execute",
-          "format":"Open PowerPoint File: {$filename$}",
+          "format":"Open PowerPoint file: {$filename$}",
           "execution_cmd":"%TP_PLUGIN_FOLDER%SlideControl\\tp_sc.bat /cmd:OPEN /arg:{$filename$}",
           "data": [
             {

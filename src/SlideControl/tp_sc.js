@@ -63,7 +63,30 @@ var activeSlideshow = function (app) {
     return ss;
 };
 
+/*  update state in TP; this function written by jsilvanus */
+var updateTPState = function(state)
+{
+  /* var socket = WScript.CreateObject("Socket.TCP");
+   socket.Timeout = 1500;
+   socket.Host = "127.0.0.1:12136";
+
+   var pairData = {};
+   var stateData = {};
+   pairData["type"] = "pair";
+   pairData["id"] = "tpsc";
+
+   stateData["type"] = "stateUpdate";
+   stateData["id"] = "tpsc_state";
+   stateData["value"] = state;
+
+   socket.SendLine(JSON.stringify(pairData));
+   socket.SendLine(JSON.stringify(stateData));
+
+   socket.close(); */
+};
+
 /*  determine current application status  */
+/* this was tweaked by jsilvanus to call updateTPSTATE() */
 var cmdSTAT = function () {
     var app  = activeApplication();
     var pres = activePresentation(app);
@@ -81,6 +104,7 @@ var cmdSTAT = function () {
         (pres !== null ? "editing" :
         (app  !== null ? "started" :
                          "closed"   )));
+    updateTPState(state);
     return "{ \"response\": { " +
         "\"state\": \"" + state + "\", " +
         "\"position\": " + slideCur + ", " +
@@ -206,6 +230,7 @@ var cmdCONTROL = function (cmd, arg) {
     return "{ \"response\": \"OK\" }";
 };
 
+    /* MAIN "LOOP" */
     /* parsing arguments; by jsilvanus */
     var colArgs = WScript.Arguments.Named;
     var cmd = colArgs.Item("cmd");
@@ -226,6 +251,9 @@ var cmdCONTROL = function (cmd, arg) {
     catch (error) {
         out = "{ \"error\": \"" + error.message + "\" }";
     }
+
+    /* update all the states */
+    cmdSTAT();
 
     /*  write the output response  */
     WScript.StdOut.Write(out + "\n");

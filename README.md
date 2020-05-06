@@ -7,6 +7,10 @@ Info: Plugin is meant to enable Touch Portal to communicate with Powerpoint.
 
 Copyright 2020 by jsilvanus@gmail.com. License MPL 2.0.
 
+# Releases
+
+1.0.0. <a href="https://github.com/jsilvanus/tp-sc/blob/master/releases/SlideControlPlugin.exe">installer</a>
+
 # Roadmap
 
 - [x] Basic actions in nerd-format

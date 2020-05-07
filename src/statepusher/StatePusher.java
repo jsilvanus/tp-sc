@@ -53,13 +53,20 @@ public class StatePusher {
 
         System.out.println("Sending strings to the Touch Portal (port "+portNumber+"):");
 
-        // write the message we want to send and send the message x2
+        // GO FOR SOCKETS!
+        // pair
         System.out.println("pairing msg: " + pairJSON);
         dataOutputStream.writeBytes(pairJSON+"\n");
         dataOutputStream.flush();
 
+        // sleep for 50ms, then continue
+        Thread.sleep(50);
+
+        // state change
         System.out.println("update msg: " + stateJSON);
         dataOutputStream.writeBytes(stateJSON+"\n");
+        dataOutputStream.flush();
+
         dataOutputStream.flush();
         // close the output stream when we're done.
         dataOutputStream.close();

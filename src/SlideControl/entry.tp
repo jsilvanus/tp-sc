@@ -75,11 +75,27 @@
           ]
         },
       ],
+      "events": [
+      {
+        "id":"tpsc_statechange",
+        "name":"When slideshow status changes",
+        "format":"When slideshow status changes to $val",
+        "type":"communicate",
+        "valueType":"choice",
+        "valueChoices": [
+          "closed",
+          "started",
+          "editing",
+          "viewing",
+        ],
+        "valueStateId":"tpsc_state",
+      }
+    ],
       "states": [
         {
           "id":"tpsc_state",
-          "type":"choice",
-          "desc":"Slideshow State",
+          "type":"communicate",
+          "desc":"Slideshow Status",
           "default":"closed",
           "valueChoices": [
             "closed",

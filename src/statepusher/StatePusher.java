@@ -1,3 +1,5 @@
+// This is heavily based on https://gist.github.com/chatton/8955d2f96f58f6082bde14e7c33f69a6
+// Modified by jsilvanus for TP plugin usage
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -36,8 +38,8 @@ public class StatePusher {
         }
 
         // Construing json packages to be sent
-        String pairJSON = "{\"type\":\"pair\",\"id\":\"" + pluginname + "\"}\n";
-        String stateJSON = "{\"type\":\"stateUpdate\",\"id\":\"" + statename + "\",\"value\":\"" + stateUpdate + "\"}\n";
+        String pairJSON = "{\"type\":\"pair\",\"id\":\"" + pluginname + "\"}";
+        String stateJSON = "{\"type\":\"stateUpdate\",\"id\":\"" + statename + "\",\"value\":\"" + stateUpdate + "\"}";
 
         // need host and port, we want to connect to TP
         System.out.println("Data constructed. Opening socket...");
@@ -49,17 +51,16 @@ public class StatePusher {
         // create a data output stream from the output stream so we can send data through it
         DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
 
-        System.out.println("Sending strings to the Touch Portal:");
+        System.out.println("Sending strings to the Touch Portal (port "+portNumber+"):");
 
         // write the message we want to send and send the message x2
         System.out.println("pairing msg: " + pairJSON);
-        dataOutputStream.writeUTF(pairJSON);
+        dataOutputStream.writeBytes(pairJSON+"\n");
         dataOutputStream.flush();
 
         System.out.println("update msg: " + stateJSON);
-        dataOutputStream.writeUTF(stateJSON);
+        dataOutputStream.writeBytes(stateJSON+"\n");
         dataOutputStream.flush();
-
         // close the output stream when we're done.
         dataOutputStream.close();
 

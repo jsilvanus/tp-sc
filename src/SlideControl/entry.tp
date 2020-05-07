@@ -75,6 +75,20 @@
           ]
         },
       ],
+      "states": [
+        {
+          "id":"tpsc_state",
+          "type":"choice",
+          "desc":"Slideshow State",
+          "default":"closed",
+          "valueChoices": [
+            "closed",
+            "started",
+            "editing",
+            "viewing",
+          ],
+        },
+      ],
     }
   ]
 }

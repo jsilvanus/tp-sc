@@ -66,23 +66,47 @@ var activeSlideshow = function (app) {
 /*  update state in TP; this function written by jsilvanus */
 var updateTPState = function(state)
 {
-  /* var socket = WScript.CreateObject("Socket.TCP");
-   socket.Timeout = 1500;
-   socket.Host = "127.0.0.1:12136";
+  var oWinsock;
+  var sServer = "127.0.0.1";
+  var nPort = 12136;
+  var bClose = false;
 
-   var pairData = {};
-   var stateData = {};
-   pairData["type"] = "pair";
-   pairData["id"] = "tpsc";
+  var pairData = {};
+  var stateData = {};
+  pairData["type"] = "pair";
+  pairData["id"] = "tpsc";
 
-   stateData["type"] = "stateUpdate";
-   stateData["id"] = "tpsc_state";
-   stateData["value"] = state;
+  stateData["type"] = "stateUpdate";
+  stateData["id"] = "tpsc_state";
+  stateData["value"] = state;
 
-   socket.SendLine(JSON.stringify(pairData));
-   socket.SendLine(JSON.stringify(stateData));
+  oWinsock = new ActiveXObject("OSWINSCK.Winsock");
+  // Hooking up handlers
+  WScript.ConnectObject(oWinsock, "oWinsock_");
+  oWinsock.Connect(sServer, nPort);
+  WScript.Echo("Invalid URL");
+  bClose = true;
 
-   socket.close(); */
+  function oWinsock_OnConnect() {
+    oWinsock.SendData(pairData);
+    oWinsock.SendData(stateData);
+  }
+
+  function oWinsock_OnError(Number, Description, Scode, Source,
+      HelpFile, HelpContext, CancelDisplay) {
+    WScript.Echo(Number + ': ' + Description);
+  }
+
+  function oWinsock_OnClose() {
+    oWinsock.CloseWinsock();
+
+    oWinsock = null;
+    bClose = true;
+  }
+
+  while (!bClose) {
+    WScript.Sleep(1);
+  }
 };
 
 /*  determine current application status  */

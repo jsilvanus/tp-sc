@@ -18,9 +18,10 @@ Copyright 2020 by jsilvanus@gmail.com. License MPL 2.0.
 - [x] Basic actions formatted so that they are human-readable (partly done)
 - [x] Installer
 - [x] Custom states that are updated automatically:
--- [x] Status of Slideshow (closed, started, viewing, editing)
--- [ ] Current slide change event
-- [ ] Split actions to easy-to-understand groups
+  - [x] Status of Slideshow (closed, started, viewing, editing)
+  - [ ] Current slide change event (number update)
+  - [ ] Custom state containing powerpoint filename
+- [ ] Split actions to easy-to-understand groups (e.g. initialize powerpoint, open slideshow, control slideshow).
 
 # Attributions and derivations
 

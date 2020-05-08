@@ -9,7 +9,8 @@ Copyright 2020 by jsilvanus@gmail.com. License MPL 2.0.
 
 # Releases
 
-1.0.0. <a href="https://github.com/jsilvanus/tp-sc/blob/master/releases/SlideControlPlugin.exe">installer</a>
+1.0.0 The First Release (released: 7.5.2020): https://github.com/jsilvanus/tp-sc/releases/tag/1.0.0
+1.1.0 The Eventful Update (released: 8.5.2020): https://github.com/jsilvanus/tp-sc/releases/tag/1.1.0
 
 # Roadmap
 

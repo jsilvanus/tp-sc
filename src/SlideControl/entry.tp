@@ -32,6 +32,7 @@
               "START",
               "CLOSE",
               "STAT",
+              "INFO",
               "STOP",
               "PAUSE",
               "RESUME",

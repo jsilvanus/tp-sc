@@ -94,7 +94,7 @@
       "states": [
         {
           "id":"tpsc_state",
-          "type":"communicate",
+          "type":"choice",
           "desc":"Slideshow Status",
           "default":"closed",
           "valueChoices": [

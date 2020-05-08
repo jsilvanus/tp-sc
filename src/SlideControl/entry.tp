@@ -29,8 +29,9 @@
             "valueChoices": [
               "BOOT",
               "QUIT",
-              "CLOSE",
               "START",
+              "CLOSE",
+              "STAT",
               "STOP",
               "PAUSE",
               "RESUME",

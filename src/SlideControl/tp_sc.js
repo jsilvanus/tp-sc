@@ -49,7 +49,7 @@ var activePresentation = function (app) {
 /*  determine whether slideshow is running  */
 var activeSlideshow = function (app) {
     var ss = null;
-    if (app !== null) {
+    if (app != null) {
         try {
             if (app.SlideShowWindows.Count > 0)
                 ss = app.SlideShowWindows.Item(1);
@@ -64,49 +64,14 @@ var activeSlideshow = function (app) {
 };
 
 /*  update state in TP; this function written by jsilvanus */
-var updateTPState = function(state)
+/*  curslide and maxslide not used yet */
+var updateTPState = function(state,curslide,maxslide)
 {
-  var oWinsock;
-  var sServer = "127.0.0.1";
-  var nPort = 12136;
-  var bClose = false;
+    updateShell = new ActiveXObject("WScript.Shell");
+    var cpPath = updateShell.ExpandEnvironmentStrings("%AppData%") + "\\TouchPortal\\plugins\\SlideControl\\";
 
-  var pairData = {};
-  var stateData = {};
-  pairData["type"] = "pair";
-  pairData["id"] = "tpsc";
-
-  stateData["type"] = "stateUpdate";
-  stateData["id"] = "tpsc_state";
-  stateData["value"] = state;
-
-  oWinsock = new ActiveXObject("OSWINSCK.Winsock");
-  // Hooking up handlers
-  WScript.ConnectObject(oWinsock, "oWinsock_");
-  oWinsock.Connect(sServer, nPort);
-  WScript.Echo("Invalid URL");
-  bClose = true;
-
-  function oWinsock_OnConnect() {
-    oWinsock.SendData(pairData);
-    oWinsock.SendData(stateData);
-  }
-
-  function oWinsock_OnError(Number, Description, Scode, Source,
-      HelpFile, HelpContext, CancelDisplay) {
-    WScript.Echo(Number + ': ' + Description);
-  }
-
-  function oWinsock_OnClose() {
-    oWinsock.CloseWinsock();
-
-    oWinsock = null;
-    bClose = true;
-  }
-
-  while (!bClose) {
-    WScript.Sleep(1);
-  }
+    /* note: shell seems to run at prgoram files / touch portal */
+    updateShell.run("javaw -cp "+cpPath+" StatePusher " +state); // note: javaw: no console window (vs. java)
 };
 
 /*  determine current application status  */
@@ -116,19 +81,27 @@ var cmdSTAT = function () {
     var pres = activePresentation(app);
     var ss   = activeSlideshow(app);
     var slideCur;
-    if (ss !== null)
-        slideCur = ss.View.CurrentShowPosition;
-    else if (pres !== null && app !== null)
-        slideCur = app.ActiveWindow.Selection.SlideRange.SlideIndex;
-    else
-        slideCur = -1;
+
+    try {
+      if (ss !== null)
+          slideCur = ss.View.CurrentShowPosition;
+      else if (pres !== null && app !== null)
+          slideCur = app.ActiveWindow.Selection.SlideRange.SlideIndex;
+      else
+          slideCur = -1;
+    } catch (e) {
+      throw new Error("problem in finding curslide");
+    }
+
     var slideMax = pres !== null ? pres.Slides.Count : -1;
     var state =
         (ss   !== null ? "viewing" :
         (pres !== null ? "editing" :
         (app  !== null ? "started" :
                          "closed"   )));
-    updateTPState(state);
+
+    updateTPState(state,slideCur,slideMax); // send update to Touch Portal
+
     return "{ \"response\": { " +
         "\"state\": \"" + state + "\", " +
         "\"position\": " + slideCur + ", " +
@@ -251,6 +224,7 @@ var cmdCONTROL = function (cmd, arg) {
         ss.View.Previous();
     else if (cmd === "NEXT")
         ss.View.Next();
+
     return "{ \"response\": \"OK\" }";
 };
 
@@ -276,8 +250,8 @@ var cmdCONTROL = function (cmd, arg) {
         out = "{ \"error\": \"" + error.message + "\" }";
     }
 
-    /* update all the states */
-    cmdSTAT();
-
     /*  write the output response  */
     WScript.StdOut.Write(out + "\n");
+
+    out = cmdSTAT(); /* update states */
+    WScript.StdOut.Write(out + "\n"); /* yeah! */

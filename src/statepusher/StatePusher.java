@@ -15,7 +15,7 @@ public class StatePusher {
         String stateUpdate = "none";
 
         // Check whether proper arguments is given.
-        if(args.length != 0) // more than 0 args
+        if(args.length == 1) // updating only the state
         {
           for(int i=0;i<validstates.length;i++) // whether args[0] is in valid states
           {
@@ -59,15 +59,22 @@ public class StatePusher {
         dataOutputStream.writeBytes(pairJSON+"\n");
         dataOutputStream.flush();
 
-        // sleep for 50ms, then continue
-        Thread.sleep(50);
+        // sleep for 2000ms, then continue
+        try
+        {
+          Thread.sleep(200);
+        }
+        catch (InterruptedException e)
+        {
+          System.out.println("error with Thread.sleep!");
+          System.out.println(e);
+        }
 
         // state change
         System.out.println("update msg: " + stateJSON);
         dataOutputStream.writeBytes(stateJSON+"\n");
         dataOutputStream.flush();
 
-        dataOutputStream.flush();
         // close the output stream when we're done.
         dataOutputStream.close();
 

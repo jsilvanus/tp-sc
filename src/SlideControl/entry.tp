@@ -7,6 +7,7 @@
     "colorDark" : "#992211",
     "colorLight" : "#0033d3"
   },
+  "plugin_start_cmd":"%TP_PLUGIN_FOLDER%SlideControl\\tp_sc_start.bat",
   "categories": [
     {
       "id":"tpscCat",
@@ -29,8 +30,10 @@
             "valueChoices": [
               "BOOT",
               "QUIT",
-              "CLOSE",
               "START",
+              "CLOSE",
+              "STAT",
+              "INFO",
               "STOP",
               "PAUSE",
               "RESUME",
@@ -73,6 +76,36 @@
               "default":1,
             },
           ]
+        },
+      ],
+      "events": [
+      {
+        "id":"tpsc_statechange",
+        "name":"When slideshow status changes",
+        "format":"When slideshow status changes to $val",
+        "type":"communicate",
+        "valueType":"choice",
+        "valueChoices": [
+          "closed",
+          "started",
+          "editing",
+          "viewing",
+        ],
+        "valueStateId":"tpsc_state",
+      }
+    ],
+      "states": [
+        {
+          "id":"tpsc_state",
+          "type":"choice",
+          "desc":"Slideshow Status",
+          "default":"closed",
+          "valueChoices": [
+            "closed",
+            "started",
+            "editing",
+            "viewing",
+          ],
         },
       ],
     }

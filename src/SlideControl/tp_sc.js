@@ -49,7 +49,7 @@ var activePresentation = function (app) {
 /*  determine whether slideshow is running  */
 var activeSlideshow = function (app) {
     var ss = null;
-    if (app !== null) {
+    if (app != null) {
         try {
             if (app.SlideShowWindows.Count > 0)
                 ss = app.SlideShowWindows.Item(1);
@@ -64,25 +64,14 @@ var activeSlideshow = function (app) {
 };
 
 /*  update state in TP; this function written by jsilvanus */
-var updateTPState = function(state)
+/*  curslide and maxslide not used yet */
+var updateTPState = function(state,curslide,maxslide)
 {
-  /* var socket = WScript.CreateObject("Socket.TCP");
-   socket.Timeout = 1500;
-   socket.Host = "127.0.0.1:12136";
+    updateShell = new ActiveXObject("WScript.Shell");
+    var cpPath = updateShell.ExpandEnvironmentStrings("%AppData%") + "\\TouchPortal\\plugins\\SlideControl\\";
 
-   var pairData = {};
-   var stateData = {};
-   pairData["type"] = "pair";
-   pairData["id"] = "tpsc";
-
-   stateData["type"] = "stateUpdate";
-   stateData["id"] = "tpsc_state";
-   stateData["value"] = state;
-
-   socket.SendLine(JSON.stringify(pairData));
-   socket.SendLine(JSON.stringify(stateData));
-
-   socket.close(); */
+    /* note: shell seems to run at prgoram files / touch portal */
+    updateShell.run("javaw -cp "+cpPath+" StatePusher " +state); // note: javaw: no console window (vs. java)
 };
 
 /*  determine current application status  */
@@ -92,19 +81,27 @@ var cmdSTAT = function () {
     var pres = activePresentation(app);
     var ss   = activeSlideshow(app);
     var slideCur;
-    if (ss !== null)
-        slideCur = ss.View.CurrentShowPosition;
-    else if (pres !== null && app !== null)
-        slideCur = app.ActiveWindow.Selection.SlideRange.SlideIndex;
-    else
-        slideCur = -1;
+
+    try {
+      if (ss !== null)
+          slideCur = ss.View.CurrentShowPosition;
+      else if (pres !== null && app !== null)
+          slideCur = app.ActiveWindow.Selection.SlideRange.SlideIndex;
+      else
+          slideCur = -1;
+    } catch (e) {
+      throw new Error("problem in finding curslide");
+    }
+
     var slideMax = pres !== null ? pres.Slides.Count : -1;
     var state =
         (ss   !== null ? "viewing" :
         (pres !== null ? "editing" :
         (app  !== null ? "started" :
                          "closed"   )));
-    updateTPState(state);
+
+    updateTPState(state,slideCur,slideMax); // send update to Touch Portal
+
     return "{ \"response\": { " +
         "\"state\": \"" + state + "\", " +
         "\"position\": " + slideCur + ", " +
@@ -227,6 +224,7 @@ var cmdCONTROL = function (cmd, arg) {
         ss.View.Previous();
     else if (cmd === "NEXT")
         ss.View.Next();
+
     return "{ \"response\": \"OK\" }";
 };
 
@@ -241,6 +239,11 @@ var cmdCONTROL = function (cmd, arg) {
     try {
         if (cmd === "STAT")
             out = cmdSTAT();
+        else if (cmd === "SLPSTAT")
+        {
+          System.Threading.Thread.Sleep(7000);
+          out = cmdSTAT();
+        }
         else if (cmd === "INFO")
             out = cmdINFO();
         else if (cmd.match(/^(BOOT|QUIT|OPEN|CLOSE|START|STOP|PAUSE|RESUME|FIRST|LAST|GOTO|PREV|NEXT)$/))
@@ -252,8 +255,11 @@ var cmdCONTROL = function (cmd, arg) {
         out = "{ \"error\": \"" + error.message + "\" }";
     }
 
-    /* update all the states */
-    cmdSTAT();
-
     /*  write the output response  */
     WScript.StdOut.Write(out + "\n");
+
+    if(cmd != "STAT")
+    {
+      out = cmdSTAT(); /* update states */
+      WScript.StdOut.Write(out + "\n"); /* yeah! */
+    }

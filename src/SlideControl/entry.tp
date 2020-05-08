@@ -7,6 +7,7 @@
     "colorDark" : "#992211",
     "colorLight" : "#0033d3"
   },
+  "plugin_start_cmd":"%TP_PLUGIN_FOLDER%SlideControl\\tp_sc_start.bat",
   "categories": [
     {
       "id":"tpscCat",

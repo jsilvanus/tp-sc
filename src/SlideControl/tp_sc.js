@@ -239,6 +239,11 @@ var cmdCONTROL = function (cmd, arg) {
     try {
         if (cmd === "STAT")
             out = cmdSTAT();
+        else if (cmd === "SLPSTAT")
+        {
+          System.Threading.Thread.Sleep(7000);
+          out = cmdSTAT();
+        }
         else if (cmd === "INFO")
             out = cmdINFO();
         else if (cmd.match(/^(BOOT|QUIT|OPEN|CLOSE|START|STOP|PAUSE|RESUME|FIRST|LAST|GOTO|PREV|NEXT)$/))
@@ -253,5 +258,8 @@ var cmdCONTROL = function (cmd, arg) {
     /*  write the output response  */
     WScript.StdOut.Write(out + "\n");
 
-    out = cmdSTAT(); /* update states */
-    WScript.StdOut.Write(out + "\n"); /* yeah! */
+    if(cmd != "STAT")
+    {
+      out = cmdSTAT(); /* update states */
+      WScript.StdOut.Write(out + "\n"); /* yeah! */
+    }
